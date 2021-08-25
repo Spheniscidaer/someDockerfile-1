@@ -21,67 +21,67 @@ cp /jds/dd_scripts/genCodeConf.list "$GEN_CODE_LIST"
 #     git -C /data/cust_repo/monk pull --rebase
 # fi
 
-if [ -n "$(ls /data/cust_repo/monk/car/*_*.js)" ]; then
-    cp -f /data/cust_repo/monk/car/*_*.js /scripts
-    cd /data/cust_repo/monk/car/
-    for scriptFile in $(ls *_*.js | grep -v monk_shop_add_to_car | tr "\n" " "); do
-        if [[ -n "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile)" && -z $1 ]]; then
-            cp $scriptFile /scripts
-            if [ ! -n "$(crontab -l | grep $scriptFile)" ]; then
-                echo "发现以前crontab里面不存在的任务，先跑为敬 $scriptFile"
-                spnode /scripts/$scriptFile | ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &
-            fi
-            echo "#monk-coder仓库任务-$(sed -n "s/.*new Env('\(.*\)').*/\1/p" $scriptFile)($scriptFile)" >>$mergedListFile
-            echo "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile) spnode /scripts/$scriptFile |ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &" >>$mergedListFile
-        fi
-    done
-fi
+# if [ -n "$(ls /data/cust_repo/monk/car/*_*.js)" ]; then
+#     cp -f /data/cust_repo/monk/car/*_*.js /scripts
+#     cd /data/cust_repo/monk/car/
+#     for scriptFile in $(ls *_*.js | grep -v monk_shop_add_to_car | tr "\n" " "); do
+#         if [[ -n "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile)" && -z $1 ]]; then
+#             cp $scriptFile /scripts
+#             if [ ! -n "$(crontab -l | grep $scriptFile)" ]; then
+#                 echo "发现以前crontab里面不存在的任务，先跑为敬 $scriptFile"
+#                 spnode /scripts/$scriptFile | ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &
+#             fi
+#             echo "#monk-coder仓库任务-$(sed -n "s/.*new Env('\(.*\)').*/\1/p" $scriptFile)($scriptFile)" >>$mergedListFile
+#             echo "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile) spnode /scripts/$scriptFile |ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &" >>$mergedListFile
+#         fi
+#     done
+# fi
 
-if [ -n "$(ls /data/cust_repo/monk/i-chenzhe/*_*.js | grep -v carnivalcity)" ]; then
-    cp -f /data/cust_repo/monk/i-chenzhe/*_*.js /scripts
-    cd /data/cust_repo/monk/i-chenzhe/
-    for scriptFile in $(ls *_*.js | tr "\n" " "); do
-        if [ -n "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile)" ]; then
-            cp $scriptFile /scripts
-            if [[ ! -n "$(crontab -l | grep $scriptFile)" && -z $1 ]]; then
-                echo "发现以前crontab里面不存在的任务，先跑为敬 $scriptFile"
-                spnode /scripts/$scriptFile | ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &
-            fi
-            echo "#monk-coder仓库任务-$(sed -n "s/.*new Env('\(.*\)').*/\1/p" $scriptFile)($scriptFile)" >>$mergedListFile
-            echo "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile) spnode /scripts/$scriptFile |ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &" >>$mergedListFile
-        fi
-    done
-fi
-if [ -n "$(ls /data/cust_repo/monk/member/*_*.js)" ]; then
-    cp -f /data/cust_repo/monk/member/*_*.js /scripts
-    cd /data/cust_repo/monk/member/
-    for scriptFile in $(ls *_*.js | tr "\n" " "); do
-        if [ -n "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile)" ]; then
-            cp $scriptFile /scripts
-            if [[ ! -n "$(crontab -l | grep $scriptFile)" && -z $1 ]]; then
-                echo "发现以前crontab里面不存在的任务，先跑为敬 $scriptFile"
-                spnode /scripts/$scriptFile | ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &
-            fi
-            echo "#monk-coder仓库任务-$(sed -n "s/.*new Env('\(.*\)').*/\1/p" $scriptFile)($scriptFile)" >>$mergedListFile
-            echo "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile) spnode /scripts/$scriptFile |ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &" >>$mergedListFile
-        fi
-    done
-fi
-if [ -n "$(ls /data/cust_repo/monk/normal/*_*.js)" ]; then
-    cp -f /data/cust_repo/monk/normal/*_*.js /scripts
-    cd /data/cust_repo/monk/normal/
-    for scriptFile in $(ls *_*.js | tr "\n" " "); do
-        if [ -n "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile)" ]; then
-            cp $scriptFile /scripts
-            if [[ ! -n "$(crontab -l | grep $scriptFile)" && -z $1 ]]; then
-                echo "发现以前crontab里面不存在的任务，先跑为敬 $scriptFile"
-                spnode /scripts/$scriptFile | ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &
-            fi
-            echo "#monk-coder仓库任务-$(sed -n "s/.*new Env('\(.*\)').*/\1/p" $scriptFile)($scriptFile)" >>$mergedListFile
-            echo "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile) spnode /scripts/$scriptFile |ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &" >>$mergedListFile
-        fi
-    done
-fi
+# if [ -n "$(ls /data/cust_repo/monk/i-chenzhe/*_*.js | grep -v carnivalcity)" ]; then
+#     cp -f /data/cust_repo/monk/i-chenzhe/*_*.js /scripts
+#     cd /data/cust_repo/monk/i-chenzhe/
+#     for scriptFile in $(ls *_*.js | tr "\n" " "); do
+#         if [ -n "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile)" ]; then
+#             cp $scriptFile /scripts
+#             if [[ ! -n "$(crontab -l | grep $scriptFile)" && -z $1 ]]; then
+#                 echo "发现以前crontab里面不存在的任务，先跑为敬 $scriptFile"
+#                 spnode /scripts/$scriptFile | ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &
+#             fi
+#             echo "#monk-coder仓库任务-$(sed -n "s/.*new Env('\(.*\)').*/\1/p" $scriptFile)($scriptFile)" >>$mergedListFile
+#             echo "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile) spnode /scripts/$scriptFile |ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &" >>$mergedListFile
+#         fi
+#     done
+# fi
+# if [ -n "$(ls /data/cust_repo/monk/member/*_*.js)" ]; then
+#     cp -f /data/cust_repo/monk/member/*_*.js /scripts
+#     cd /data/cust_repo/monk/member/
+#     for scriptFile in $(ls *_*.js | tr "\n" " "); do
+#         if [ -n "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile)" ]; then
+#             cp $scriptFile /scripts
+#             if [[ ! -n "$(crontab -l | grep $scriptFile)" && -z $1 ]]; then
+#                 echo "发现以前crontab里面不存在的任务，先跑为敬 $scriptFile"
+#                 spnode /scripts/$scriptFile | ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &
+#             fi
+#             echo "#monk-coder仓库任务-$(sed -n "s/.*new Env('\(.*\)').*/\1/p" $scriptFile)($scriptFile)" >>$mergedListFile
+#             echo "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile) spnode /scripts/$scriptFile |ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &" >>$mergedListFile
+#         fi
+#     done
+# fi
+# if [ -n "$(ls /data/cust_repo/monk/normal/*_*.js)" ]; then
+#     cp -f /data/cust_repo/monk/normal/*_*.js /scripts
+#     cd /data/cust_repo/monk/normal/
+#     for scriptFile in $(ls *_*.js | tr "\n" " "); do
+#         if [ -n "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile)" ]; then
+#             cp $scriptFile /scripts
+#             if [[ ! -n "$(crontab -l | grep $scriptFile)" && -z $1 ]]; then
+#                 echo "发现以前crontab里面不存在的任务，先跑为敬 $scriptFile"
+#                 spnode /scripts/$scriptFile | ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &
+#             fi
+#             echo "#monk-coder仓库任务-$(sed -n "s/.*new Env('\(.*\)').*/\1/p" $scriptFile)($scriptFile)" >>$mergedListFile
+#             echo "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile) spnode /scripts/$scriptFile |ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &" >>$mergedListFile
+#         fi
+#     done
+# fi
 
 # echo "附加功能3，拉取@nianyuguai的longzhuzhu仓库的代码，并增加相关任务"
 # if [ ! -d "/data/cust_repo/longzhuzhu/" ]; then
@@ -92,6 +92,7 @@ fi
 #     git -C /data/cust_repo/longzhuzhu reset --hard
 #     git -C /data/cust_repo/longzhuzhu pull --rebase
 # fi
+
 if [ -n "$(ls /data/cust_repo/longzhuzhu/qx/*_*.js)" ]; then
     cp -f /data/cust_repo/longzhuzhu/qx/*_*.js /scripts
     cd /data/cust_repo/longzhuzhu/qx/
@@ -177,17 +178,17 @@ sed -i "/TG_USER_ID =/s/= \(.*\)/= $TG_USER_ID/g" /data/cust_repo/curtinlv/OpenC
 # echo "#curtinlv的赚京豆 " >>$mergedListFile
 # echo "05 0,7,23 * * * cd /data/cust_repo/curtinlv && python3 jd_zjd.py |ts >>/data/logs/jd_zjd.log 2>&1 &" >>$mergedListFile
 
-echo "#curtinlv抢京豆" >>$mergedListFile
-echo "11 0 * * * cd /data/cust_repo/curtinlv && python3 jd_qjd.py |ts >>/data/logs/jd_qjd.log 2>&1 &" >>$mergedListFile
+# echo "#curtinlv抢京豆" >>$mergedListFile
+# echo "11 0 * * * cd /data/cust_repo/curtinlv && python3 jd_qjd.py |ts >>/data/logs/jd_qjd.log 2>&1 &" >>$mergedListFile
 
 echo "#curtinlv东东超市兑换" >>$mergedListFile
 sed -i "/coinToBeans =/s/''/'京豆包'/g" /data/cust_repo/curtinlv/jd_blueCoin.py
 sed -i "/blueCoin_Cc = /s/False/True/g" /data/cust_repo/curtinlv/jd_blueCoin.py
 echo "59 23 * * * cd /data/cust_repo/curtinlv && python3 jd_blueCoin.py |ts >>/data/logs/jd_blueCoinPy.log 2>&1 &" >>$mergedListFile
 
-echo "#curtinlv的会员开卡仓库任务 " >>$mergedListFile
-echo "2 8,15 * * * cd /data/cust_repo/curtinlv/OpenCard && python3 jd_OpenCard.py |ts >>/data/logs/jd_OpenCard.log 2>&1 &" >>$mergedListFile
+# echo "#curtinlv的会员开卡仓库任务 " >>$mergedListFile
+# echo "2 8,15 * * * cd /data/cust_repo/curtinlv/OpenCard && python3 jd_OpenCard.py |ts >>/data/logs/jd_OpenCard.log 2>&1 &" >>$mergedListFile
 
-echo "#curtinlv的关注有礼任务 " >>$mergedListFile
-cat /data/cookies.list >/data/cust_repo/curtinlv/getFollowGifts/JDCookies.txt
-echo "15 8,15 * * * cd /data/cust_repo/curtinlv/getFollowGifts && python3 jd_getFollowGift.py |ts >>/data/logs/jd_getFollowGift.log 2>&1 &" >>$mergedListFile
+# echo "#curtinlv的关注有礼任务 " >>$mergedListFile
+# cat /data/cookies.list >/data/cust_repo/curtinlv/getFollowGifts/JDCookies.txt
+# echo "15 8,15 * * * cd /data/cust_repo/curtinlv/getFollowGifts && python3 jd_getFollowGift.py |ts >>/data/logs/jd_getFollowGift.log 2>&1 &" >>$mergedListFile
