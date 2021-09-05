@@ -239,7 +239,7 @@ set -e
 echo "清除非当日产生的日志，准备提交互助码码到助力池"
 curr_dt=\$(date | awk '{print \$2" "\$3}')
 pre_dt=\$(date -d "@\$((\$(date +%s) - 86400))" | awk '{print \$2" "\$3}')
-for dd_log in \$(ls /data/logs/ | grep .log); do
+for dd_log in \$(ls /data/logs/ | grep "^jd.*log\$"); do
     if [ "\${dd_log}" == "gua_carnivalcity.log" ];then
         echo "清空非\${curr_dt}的日志"
         sed -i "/^\${curr_dt}.*/!d" "/data/logs/\${dd_log}"
