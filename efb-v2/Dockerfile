@@ -54,11 +54,6 @@ RUN set -ex \
         && pip3 install cairosvg \
         && cd / \
         && mkdir /cust \
-        && git clone https://github.com/ehForwarderBot/efb-mp-instantview-middleware.git \
-        && git clone https://github.com/ehForwarderBot/efb-link_preview-middleware.git \
-        && cd /efb-mp-instanceview-middleware/ && python3 setup.py install \
-        && cd /efb-link_preview-middleware/ && python3 setup.py install \
-        && rm -rf /efb-mp-instanceview-middleware/ /efb-link_preview-middleware/ \
         && chmod +x /usr/local/bin/docker_entrypoint.sh
 
 ENTRYPOINT ["docker_entrypoint.sh"]
