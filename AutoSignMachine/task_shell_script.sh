@@ -127,7 +127,7 @@ if [ $ENABLE_UNICOM ]; then
         fi
         i=$(expr $i + 1)
       done
-      echo "17 10,16 * * * sh /AutoSignMachine/SequentialTryRunJob.sh dailyBookRead10doDraw ${bookReadFlowAccs} >> /logs/seq_book_read.log 2>&1 &" >>${mergedListFile}
+      # echo "17 10,16 * * * sh /AutoSignMachine/SequentialTryRunJob.sh dailyBookRead10doDraw ${bookReadFlowAccs} >> /logs/seq_book_read.log 2>&1 &" >>${mergedListFile}
     elif [ $UNICOM_TRYRUN_MODE ]; then
       echo "联通配置了UNICOM_TRYRUN_NODE参数，所以定时任务以tryrun模式生成"
       minute=$((RANDOM % 10 + 4))
