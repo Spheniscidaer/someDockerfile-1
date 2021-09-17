@@ -93,6 +93,7 @@ if [ $ENABLE_UNICOM ]; then
       pwds=$(cat ~/.AutoSignMachine/.env | grep UNICOM_PASSWORD | sed -n "s/.*'\(.*\)'.*/\1/p")
       appids=$(cat ~/.AutoSignMachine/.env | grep UNICOM_APPID | sed -n "s/.*'\(.*\)'.*/\1/p")
       bookReadFlows=$(cat ~/.AutoSignMachine/.env | grep ENABLE_BOOK_READ | sed -n "s/.*'\(.*\)'.*/\1/p")
+      goodIndexs=$(cat ~/.AutoSignMachine/.env | grep GOOD_INDEX | sed -n "s/.*'\(.*\)'.*/\1/p")
       i=1
       bookReadFlowAccs=""
       for username in $(cat ~/.AutoSignMachine/.env | grep UNICOM_USERNAME | sed -n "s/.*'\(.*\)'.*/\1/p" | sed "s/,/ /g"); do
@@ -112,11 +113,13 @@ if [ $ENABLE_UNICOM ]; then
         pwd=$(echo "$pwds" | cut -d ',' -f$i)
         appid="$(echo "$appids" | cut -d ',' -f$i)"
         bookReadFlow="$(echo "$bookReadFlows" | cut -d ',' -f$i)"
+        goodIndex="$(echo "$goodIndexs" | cut -d ',' -f$i)"
         #echo $appid
         echo "UNICOM_USERNAME = '$username'" >/"$sub_dir"/config/.env
         echo "UNICOM_PASSWORD = '$pwd'" >>/"$sub_dir"/config/.env
         echo "UNICOM_APPID = '$appid'" >>/"$sub_dir"/config/.env
         echo "ASYNC_TASKS = true" >>/"$sub_dir"/config/.env
+        echo "GOOD_INDEX = '$goodIndex'" >>/"$sub_dir"/config/.env
         echo "*/30 7-22 * * * sleep \$((RANDOM % 10)); node /$sub_dir/index.js unicom >> /logs/unicom${username:7:4}.log 2>&1 &" >>${mergedListFile}
         if [[ -n "${bookReadFlow}" && "${bookReadFlow}" == "true" ]]; then
           if [ "$bookReadFlowAccs" == "" ]; then
