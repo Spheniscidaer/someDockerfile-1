@@ -237,7 +237,7 @@ echo "增加清理日志，提交互助码到助力池脚本。（测试中）"
 set -e
 
 curr_dt=\$(date -R | awk '{print \$3" "\$2}')
-echo "清除非当日($curr_dt)产生的日志，准备提交互助码码到助力池"
+echo "清除非当日(\${curr_dt})产生的日志，准备提交互助码码到助力池"
 for dd_log in \$(ls /data/logs/ | grep "^jd.*log\$"); do
       sed -i "/^\${curr_dt}.*/!d" "/data/logs/\${dd_log}"
 done
