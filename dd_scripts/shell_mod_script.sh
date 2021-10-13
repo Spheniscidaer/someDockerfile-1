@@ -93,21 +93,21 @@ cp /jds/dd_scripts/genCodeConf.list "$GEN_CODE_LIST"
 #     git -C /data/cust_repo/longzhuzhu pull --rebase
 # fi
 
-if [ -n "$(ls /data/cust_repo/longzhuzhu/qx/*_*.js)" ]; then
-    cp -f /data/cust_repo/longzhuzhu/qx/*_*.js /scripts
-    cd /data/cust_repo/longzhuzhu/qx/
-    for scriptFile in $(ls *_*.js | tr "\n" " "); do
-        if [ -n "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile)" ]; then
-            cp $scriptFile /scripts
-            if [[ -z "$(crontab -l | grep $scriptFile)" && -z $1 ]]; then
-                echo "发现以前crontab里面不存在的任务，先跑为敬 $scriptFile"
-                spnode /scripts/$scriptFile | ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &
-            fi
-            echo "#longzhuzhu仓库任务-$(sed -n "s/.*new Env('\(.*\)').*/\1/p" $scriptFile)($scriptFile)" >>$mergedListFile
-            echo "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile) spnode conc /scripts/$scriptFile |ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &" >>$mergedListFile
-        fi
-    done
-fi
+# if [ -n "$(ls /data/cust_repo/longzhuzhu/qx/*_*.js)" ]; then
+#     cp -f /data/cust_repo/longzhuzhu/qx/*_*.js /scripts
+#     cd /data/cust_repo/longzhuzhu/qx/
+#     for scriptFile in $(ls *_*.js | tr "\n" " "); do
+#         if [ -n "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile)" ]; then
+#             cp $scriptFile /scripts
+#             if [[ -z "$(crontab -l | grep $scriptFile)" && -z $1 ]]; then
+#                 echo "发现以前crontab里面不存在的任务，先跑为敬 $scriptFile"
+#                 spnode /scripts/$scriptFile | ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &
+#             fi
+#             echo "#longzhuzhu仓库任务-$(sed -n "s/.*new Env('\(.*\)').*/\1/p" $scriptFile)($scriptFile)" >>$mergedListFile
+#             echo "$(sed -n "s/.*cronexpr=\"\(.*\)\".*/\1/p" $scriptFile) spnode conc /scripts/$scriptFile |ts >>/data/logs/$(echo $scriptFile | sed "s/.js/.log/g") 2>&1 &" >>$mergedListFile
+#         fi
+#     done
+# fi
 
 #同步自定义脚本文件里面脚本任务
 if [ -n "$(ls /data/custom_scripts/*_*.js)" ]; then
@@ -136,43 +136,43 @@ else
     git -C /data/cust_repo/curtinlv pull --rebase
 fi
 
-if type pip3 >/dev/null 2>&1; then
-    echo "会员开卡脚本需环境经存在，跳过安装依赖环境"
-    if [[ "$(pip3 list | grep Telethon)" == "" || "$(pip3 list | grep APScheduler)" == "" ]]; then
-        pip3 install requests
-    fi
-else
-    echo "会员开卡脚本需要python3环境，安装所需python3及依赖环境"
-    apk add --update python3-dev py3-pip
-    pip3 install requests
-fi
+# if type pip3 >/dev/null 2>&1; then
+#     echo "会员开卡脚本需环境经存在，跳过安装依赖环境"
+#     if [[ "$(pip3 list | grep Telethon)" == "" || "$(pip3 list | grep APScheduler)" == "" ]]; then
+#         pip3 install requests
+#     fi
+# else
+#     echo "会员开卡脚本需要python3环境，安装所需python3及依赖环境"
+#     apk add --update python3-dev py3-pip
+#     pip3 install requests
+# fi
 
-cd /data/cust_repo/curtinlv/OpenCard
-rn=1
-for ck in $(cat /data/cookies.list | grep -v "//" | tr "\n" " "); do
-    if [ ${#ck} -gt 10 ];then
-        if [ $rn == 1 ]; then
-            echo "账号$rn【$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")】$ck" >/data/cust_repo/curtinlv/JDCookies.txt
-            sed -i "/qjd_zlzh =/s/= \(.*\)/= ['$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")',]/g" /data/cust_repo/curtinlv/jd_qjd.py
-            sed -i "/zlzh =/s/= \(.*\)/= ['$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")',]/g" /data/cust_repo/curtinlv/jd_zjd.py
-            sed -i "/cash_zlzh =/s/= \(.*\)/= ['$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")',]/g" /data/cust_repo/curtinlv/jd_cashHelp.py
-        else
-            if [ $rn == 4 ] || [ $rn == 3 ]; then
-                sed -i "/qjd_zlzh =/s/]/'$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")',]/g" /data/cust_repo/curtinlv/jd_qjd.py
-                sed -i "/zlzh =/s/]/'$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")',]/g" /data/cust_repo/curtinlv/jd_zjd.py
-                sed -i "/cash_zlzh =/s/]/'$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")',]/g" /data/cust_repo/curtinlv/jd_cashHelp.py
-            fi
-            echo "账号$rn【$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")】$ck" >>/data/cust_repo/curtinlv/JDCookies.txt
-        fi
-        rn=$(expr $rn + 1)
-    fi
-done
-OpenCardCookies=$(cat /data/cookies.list | grep -v "#\|jd_WUUpyT\|jd_SgGoap\|620311248_" | tr "\n" "&" | sed "s/&$//")
-sed -i "/JD_COOKIE =/s/= \(.*\)/= '$OpenCardCookies'/g" /data/cust_repo/curtinlv/OpenCard/OpenCardConfig.ini
-sed -i "/openCardBean =/s/= \(.*\)/= 20/g" /data/cust_repo/curtinlv/OpenCard/OpenCardConfig.ini
-sed -i "/memory =/s/= \(.*\)/= no/g" /data/cust_repo/curtinlv/OpenCard/OpenCardConfig.ini
-sed -i "/TG_BOT_TOKEN =/s/= \(.*\)/= $TG_BOT_TOKEN/g" /data/cust_repo/curtinlv/OpenCard/OpenCardConfig.ini
-sed -i "/TG_USER_ID =/s/= \(.*\)/= $TG_USER_ID/g" /data/cust_repo/curtinlv/OpenCard/OpenCardConfig.ini
+# cd /data/cust_repo/curtinlv/OpenCard
+# rn=1
+# for ck in $(cat /data/cookies.list | grep -v "//" | tr "\n" " "); do
+#     if [ ${#ck} -gt 10 ];then
+#         if [ $rn == 1 ]; then
+#             echo "账号$rn【$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")】$ck" >/data/cust_repo/curtinlv/JDCookies.txt
+#             sed -i "/qjd_zlzh =/s/= \(.*\)/= ['$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")',]/g" /data/cust_repo/curtinlv/jd_qjd.py
+#             sed -i "/zlzh =/s/= \(.*\)/= ['$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")',]/g" /data/cust_repo/curtinlv/jd_zjd.py
+#             sed -i "/cash_zlzh =/s/= \(.*\)/= ['$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")',]/g" /data/cust_repo/curtinlv/jd_cashHelp.py
+#         else
+#             if [ $rn == 4 ] || [ $rn == 3 ]; then
+#                 sed -i "/qjd_zlzh =/s/]/'$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")',]/g" /data/cust_repo/curtinlv/jd_qjd.py
+#                 sed -i "/zlzh =/s/]/'$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")',]/g" /data/cust_repo/curtinlv/jd_zjd.py
+#                 sed -i "/cash_zlzh =/s/]/'$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")',]/g" /data/cust_repo/curtinlv/jd_cashHelp.py
+#             fi
+#             echo "账号$rn【$(echo $ck | sed -n "s/.*pt_pin=\(.*\)\;/\1/p")】$ck" >>/data/cust_repo/curtinlv/JDCookies.txt
+#         fi
+#         rn=$(expr $rn + 1)
+#     fi
+# done
+# OpenCardCookies=$(cat /data/cookies.list | grep -v "#\|jd_WUUpyT\|jd_SgGoap\|620311248_" | tr "\n" "&" | sed "s/&$//")
+# sed -i "/JD_COOKIE =/s/= \(.*\)/= '$OpenCardCookies'/g" /data/cust_repo/curtinlv/OpenCard/OpenCardConfig.ini
+# sed -i "/openCardBean =/s/= \(.*\)/= 20/g" /data/cust_repo/curtinlv/OpenCard/OpenCardConfig.ini
+# sed -i "/memory =/s/= \(.*\)/= no/g" /data/cust_repo/curtinlv/OpenCard/OpenCardConfig.ini
+# sed -i "/TG_BOT_TOKEN =/s/= \(.*\)/= $TG_BOT_TOKEN/g" /data/cust_repo/curtinlv/OpenCard/OpenCardConfig.ini
+# sed -i "/TG_USER_ID =/s/= \(.*\)/= $TG_USER_ID/g" /data/cust_repo/curtinlv/OpenCard/OpenCardConfig.ini
 
 
 # echo "#curtinlv的赚京豆 " >>$mergedListFile
