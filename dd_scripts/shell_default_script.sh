@@ -54,7 +54,7 @@ elif [ "$(arch)" == "aarch64" ]; then
   fi
 else
   echo "arm"
-  cmp -s /jds/dd_scripts/bot/ddBot-arm64 /usr/local/bin/ddBot
+  cmp -s /jds/dd_scripts/bot/ddBot-arm /usr/local/bin/ddBot
   
   if [ $? -ne 0 ] ;then
     cp /jds/dd_scripts/bot/ddBot-arm /usr/local/bin/ddBot
