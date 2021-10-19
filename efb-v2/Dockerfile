@@ -46,12 +46,15 @@ COPY ./efb-v2/docker_entrypoint.sh /usr/local/bin/
 
 RUN set -ex \
         && pip3 install --upgrade pip \
+        && pip3 install lottie \
+        && pip3 install cairosvg \
         && pip3 install ehforwarderbot \
         && pip3 install efb-telegram-master \
         && pip3 install efb-wechat-slave \
         && pip3 install efb-qq-slave \
-        && pip3 install lottie \
-        && pip3 install cairosvg \
+        && pip3 install efb-msg_blocker-middleware \
+        && pip3 install efb-notice-middleware \
+        && pip3 install efb-voice_recog-middleware \
         && cd / \
         && mkdir /cust \
         && chmod +x /usr/local/bin/docker_entrypoint.sh
